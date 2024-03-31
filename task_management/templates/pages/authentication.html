@@ -1,0 +1,174 @@
+{% extends '_base.html' %}
+{% block content %}
+<div class="container justify-content-center">\
+    <div class="row">
+        <div class="col-md-4 offset-md-4">
+            <div class="card align-middle" style="margin-top: 120px;">
+                <article class="card-body">
+                    <ul class="nav nav-pills sr-only" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#signin" role="tab"
+                                aria-controls="pills-home" aria-selected="true">Sign In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#signup" role="tab"
+                                aria-controls="pills-profile" aria-selected="false">Sign Up</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="signin" role="tabpanel"
+                            aria-labelledby="pills-home-tab">
+                            <h4 class="card-title text-center mb-4 mt-1">Sign in</h4>
+                            <form id="signInForm" method="POST">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                                        </div>
+                                        <input name="username" class="form-control" placeholder="username" type="text">
+                                    </div> <!-- input-group.// -->
+                                </div> <!-- form-group// -->
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                                        </div>
+                                        <input class="form-control" placeholder="******" type="password"
+                                            name="password">
+                                    </div>
+                                </div> 
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary btn-block"> Login </button>
+                                    <p class="pt-3">Don't have an account? <a class="btn btn-link text-primary" id="signUpLink">Sign up Here.</a></p>
+                                </div> <!-- form-group// -->
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="signup" role="tabpanel"
+                            aria-labelledby="pills-home-tab">
+                            <h4 class="card-title text-center mb-4 mt-1">Sign Up</h4>
+                            <form id="signUpForm" method="POST">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="fa fa-id-card"></i> </span>
+                                        </div>
+                                        <input name="first_name" class="form-control" placeholder="First Name" type="text" required>
+                                    </div> 
+                                </div> 
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="fa fa-id-card"></i> </span>
+                                        </div>
+                                        <input name="last_name" class="form-control" placeholder="Last Name" type="text" required>
+                                    </div> 
+                                </div> 
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="fa fa-at"></i> </span>
+                                        </div>
+                                        <input name="email" class="form-control" placeholder="Email" type="text" required>
+                                    </div> 
+                                </div> 
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                                        </div>
+                                        <input name="username" class="form-control" placeholder="Username" type="text" required>
+                                    </div> 
+                                </div> 
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                                        </div>
+                                        <input class="form-control" placeholder="Password" type="password"
+                                            name="password" required>
+                                    </div>
+                                </div> 
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                                        </div>
+                                        <input class="form-control" placeholder="Confirm Password" type="password"
+                                            name="password" required>
+                                    </div>
+                                </div> 
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary btn-block"> Signup </button>
+                                    <p class="pt-3">Already have an account? <a class="btn btn-link text-primary" id="signInLink">Sign in Here.</a></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    $(document).ready(function(){
+        $('#signInLink').click(function(){
+          $('#myTab a[href="#signin"]').tab('show')
+        })
+        
+        $('#signUpLink').click(function(){
+          $('#myTab a[href="#signup"]').tab('show')
+        })
+
+        $('#signUpForm').submit(function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+    
+            var data = new FormData(this);
+
+            processAuthForm('signUpForm', '/api/signup', data, 'Signup')
+        })
+
+        $('#signInForm').submit(function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+    
+            var data = new FormData(this);
+
+            processAuthForm('signUpForm', '/api/login', data, 'Signin')
+        })
+
+        function processAuthForm(
+            formId,
+            url,
+            data,
+            type
+        ){
+            if($(`#${formId}`).valid()){
+                $.ajax({
+                    url:url,
+                    method:'POST',
+                    data:data,
+                    contentType:false,
+                    processData:false
+                })
+                .done(data => {
+                    $('#myTab a[href="#signin"]').tab('show')
+                    if(type == "Signup"){
+                        toastr.success("Signed up Successfully", "Success",{positionClass:'toast-top-center'})
+                    }else{
+                        localStorage.setItem('token', data.token)
+                        window.location.href = '/'
+                    }
+                })
+                .fail(e => {
+                    toastr.error(`${type} Failed`, "Error",{positionClass:'toast-top-center'})
+                })
+            }
+        }
+    })
+</script>
+{% endblock %}

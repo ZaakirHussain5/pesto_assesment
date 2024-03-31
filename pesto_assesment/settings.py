@@ -37,6 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Custom app for task management
+    'task_management',             
+    # Third-party apps
+    'knox',   
+    'rest_framework',                      
 ]
 
 MIDDLEWARE = [
@@ -99,6 +104,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    # Default authentication classes for API views
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'knox.auth.TokenAuthentication',  # Use Knox token authentication
+    ),
+    # Date and time format used for serialization
+    "DATETIME_FORMAT": "%d-%m-%Y %H:%M:%S",
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
